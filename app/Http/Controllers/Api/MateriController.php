@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Materi;
 use App\Http\Requests\StoreMateriRequest;
 use App\Http\Requests\UpdateMateriRequest;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class MateriController extends Controller
 {
@@ -14,7 +16,12 @@ class MateriController extends Controller
      */
     public function index()
     {
-        //
+        $materi = Materi::all();
+        return response()->json([
+            'success' => true,
+            'message' => "Berhasil mendapatkan data",
+            'user'    => $materi,
+        ], 200);
     }
 
     /**
@@ -28,9 +35,37 @@ class MateriController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreMateriRequest $request)
+    public function store(Request $request)
     {
-        //
+        try {
+            $validator = Validator::make($request->all(), [
+                'judul' => 'required|string',
+                'deskripsi' => 'required|string'
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json($validator->errors(), 400);
+            }
+
+            $materi = Materi::create([
+                'judul' => $request->judul,
+                'deskripsi' => $request->deskripsi
+            ]);
+
+            if($materi) {
+                return response()->json([
+                    'success' => true,
+                    'message' => "Berhasil menyimpan data",
+                    'materi' => $materi,
+                ], 200);
+            }
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage(),
+            ],500);
+        }
     }
 
     /**
@@ -52,9 +87,37 @@ class MateriController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateMateriRequest $request, Materi $materi)
+    public function update(Request $request, Materi $materi)
     {
-        //
+        try {
+            $validator = Validator::make($request->all(), [
+                'judul' => 'required|string',
+                'deskripsi' => 'required|string'
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json($validator->errors(), 400);
+            }
+
+            $materi->update([
+                'judul' => $request->judul,
+                'deskripsi' => $request->deskripsi
+            ]);
+
+            if($materi) {
+                return response()->json([
+                    'success' => true,
+                    'message' => "Berhasil mengupdate data",
+                    'materi' => $materi,
+                ], 200);
+            }
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage(),
+            ],500);
+        }
     }
 
     /**
@@ -62,6 +125,17 @@ class MateriController extends Controller
      */
     public function destroy(Materi $materi)
     {
-        //
+        try {
+            $materi->delete();
+            return response()->json([
+                'success' => true,
+                'message' => 'Berhasil menghapus data'
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage(),
+            ],500);
+        }
     }
 }

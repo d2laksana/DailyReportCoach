@@ -34,8 +34,8 @@ class UsersController extends Controller
         try {
             $validator = Validator::make($request->all(), [
                 'name' => 'required',
-                'noHp' => 'required',
-                'email' => 'required',
+                'noHp' => 'required|unique:users',
+                'email' => 'required|unique:users',
                 'password' => 'required|confirmed'
             ]);
     
@@ -53,7 +53,7 @@ class UsersController extends Controller
                 return response()->json([
                     'success' => true,
                     'user'    => $user,
-                ], 201);
+                ], 200);
             }
 
         } catch (\Throwable $th) {
