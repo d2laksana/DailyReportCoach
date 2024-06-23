@@ -4,8 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\JadwalKelas;
-use App\Http\Requests\StoreJadwalKelasRequest;
-use App\Http\Requests\UpdateJadwalKelasRequest;
+use Illuminate\Http\Request;
 
 class JadwalKelasController extends Controller
 {
@@ -28,9 +27,9 @@ class JadwalKelasController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreJadwalKelasRequest $request)
+    public function store(Request $request)
     {
-        //
+        
     }
 
     /**
@@ -52,7 +51,7 @@ class JadwalKelasController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateJadwalKelasRequest $request, JadwalKelas $jadwalKelas)
+    public function update(Request $request, JadwalKelas $jadwalKelas)
     {
         //
     }

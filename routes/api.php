@@ -13,6 +13,8 @@ Route::post('login', [AuthController::class, 'login']);
 Route::post('logout', [AuthController::class, 'logout']);
 Route::post('register', [UsersController::class, 'store']);
 
+
+// resources
 Route::apiResource('users', UsersController::class)->middleware(AuthMiddleware::class);
 Route::apiResource('materi', MateriController::class)->middleware(AuthMiddleware::class);
 Route::apiResource('jadwal', JadwalKelasController::class)->middleware(AuthMiddleware::class);

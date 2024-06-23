@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('jadwal_kelas', function (Blueprint $table) {
             $table->id();
             $table->string('nama');
-            $table->string('hari');
+            $table->enum('hari', ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Friday', 'Saturday']);
             $table->foreignId('materis_id')->constrained('materis')->onDelete('cascade');
             $table->string('tempat');
             $table->time('mulai');
