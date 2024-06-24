@@ -21,4 +21,5 @@ Route::apiResource('jadwal', JadwalKelasController::class)->middleware(AuthMiddl
 Route::apiResource('siswa', SiswaController::class)->middleware(AuthMiddleware::class);
 Route::apiResource('absensi', AbsensiController::class)->middleware(AuthMiddleware::class);
 
-
+Route::get('getabsen', [AbsensiController::class, 'filterAbsen'])->middleware(AuthMiddleware::class);
+Route::get('getjadwaltoday', [JadwalKelasController::class, 'getJadwalToday'])->middleware(AuthMiddleware::class);

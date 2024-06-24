@@ -11,10 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('siswas', function (Blueprint $table) {
-            $table->string('noIdentitas')->primary();
-            $table->string('nama');
-            $table->string('noTelp');
+        Schema::create('pertemuans', function (Blueprint $table) {
+            $table->id();
+            $table->integer('pertemuan_ke')->unique()->index();
             $table->foreignId('jadwal_kelas_id')->constrained('jadwal_kelas')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
@@ -25,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('siswas');
+        Schema::dropIfExists('pertemuans');
     }
 };

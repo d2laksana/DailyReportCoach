@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('nama');
             $table->enum('hari', ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Friday', 'Saturday']);
-            $table->foreignId('materis_id')->constrained('materis')->onDelete('cascade');
+            $table->foreignId('materis_id')->constrained('materis')->onDelete('cascade')->onUpdate('cascade');
             $table->string('tempat');
             $table->time('mulai');
             $table->time('selesai');

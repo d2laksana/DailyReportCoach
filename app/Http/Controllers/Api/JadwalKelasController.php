@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\JadwalKelas;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -173,6 +174,28 @@ class JadwalKelasController extends Controller
                 'success' => false,
                 'message' => 'Data tidak ditemukan'
             ], 404);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ], 500);
+        }
+    }
+
+    public function getJadwalToday()
+    {
+        try {
+            $jadwalToday = DB::table('jadwal_kelas')
+                ->where('jadwal_kelas.hari', '=', Carbon::now()->format('l'))
+                ->get();
+
+            if (count($jadwalToday) != 0) {
+                return response()->json([
+                    'success' => true,
+                    'message' => "Berhasil mendapatkan data",
+                    'data' => $jadwalToday,
+                ], 200);
+            }
         } catch (\Throwable $th) {
             return response()->json([
                 'success' => false,
