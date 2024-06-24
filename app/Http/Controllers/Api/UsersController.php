@@ -38,11 +38,11 @@ class UsersController extends Controller
                 'email' => 'required|unique:users',
                 'password' => 'required|confirmed'
             ]);
-    
+
             if ($validator->fails()) {
                 return response()->json($validator->errors(), 400);
             }
-    
+
             $user = User::create([
                 'name' => $request->name,
                 'noHp' => $request->noHp,
@@ -55,7 +55,6 @@ class UsersController extends Controller
                     'user'    => $user,
                 ], 200);
             }
-
         } catch (\Throwable $th) {
             return response()->json([
                 'success' => false,
@@ -90,6 +89,17 @@ class UsersController extends Controller
      */
     public function destroy(users $users)
     {
-        //
+        try {
+            $users->delete();
+            return response()->json([
+                'success' => true,
+                'message' => 'Berhasil menghapus data'
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage(),
+            ], 500);
+        }
     }
 }

@@ -52,19 +52,18 @@ class MateriController extends Controller
                 'deskripsi' => $request->deskripsi
             ]);
 
-            if($materi) {
+            if ($materi) {
                 return response()->json([
                     'success' => true,
                     'message' => "Berhasil menyimpan data",
                     'materi' => $materi,
                 ], 200);
             }
-
         } catch (\Throwable $th) {
             return response()->json([
                 'success' => false,
                 'message' => $th->getMessage(),
-            ],500);
+            ], 500);
         }
     }
 
@@ -73,7 +72,18 @@ class MateriController extends Controller
      */
     public function show(Materi $materi)
     {
-        //
+        try {
+            return response()->json([
+                'success' => true,
+                'message' => 'Berhasil mendapatkan data',
+                'data' => $materi
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -103,20 +113,16 @@ class MateriController extends Controller
                 'judul' => $request->judul,
                 'deskripsi' => $request->deskripsi
             ]);
-
-            if($materi) {
-                return response()->json([
-                    'success' => true,
-                    'message' => "Berhasil mengupdate data",
-                    'materi' => $materi,
-                ], 200);
-            }
-
+            return response()->json([
+                'success' => true,
+                'message' => "Berhasil mengupdate data",
+                'materi' => $materi,
+            ], 200);
         } catch (\Throwable $th) {
             return response()->json([
                 'success' => false,
                 'message' => $th->getMessage(),
-            ],500);
+            ], 500);
         }
     }
 
@@ -135,7 +141,7 @@ class MateriController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => $th->getMessage(),
-            ],500);
+            ], 500);
         }
     }
 }

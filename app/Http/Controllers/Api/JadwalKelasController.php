@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\JadwalKelas;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class JadwalKelasController extends Controller
 {
@@ -13,7 +15,28 @@ class JadwalKelasController extends Controller
      */
     public function index()
     {
-        //
+        try {
+            // $jadwalKelas = JadwalKelas::all();
+
+            $jadwalKelass = DB::table('jadwal_kelas')
+                ->join('materis', 'jadwal_kelas.materis_id', '=', 'materis.id')
+                ->select('jadwal_kelas.*', 'materis.judul as judul_materi')
+                ->get();
+
+            // $jadwalKelass = JadwalKelas::with('materis')->get();
+
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Berhasil mendapatkan data',
+                'data' => $jadwalKelass
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ], 500);
+        }
     }
 
     /**
@@ -29,15 +52,67 @@ class JadwalKelasController extends Controller
      */
     public function store(Request $request)
     {
-        
+        try {
+            $validator = Validator::make($request->all(), [
+                'nama' => 'required|string',
+                'hari' => 'required',
+                'materis_id' => 'required',
+                'tempat' => 'required',
+                'mulai' => 'required',
+                'selesai' => 'required'
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json($validator->errors(), 400);
+            }
+
+            $jadwal = JadwalKelas::create([
+                'nama' => $request->nama,
+                'hari' => $request->hari,
+                'materis_id' => $request->materis_id,
+                'tempat' => $request->tempat,
+                'mulai' => $request->mulai,
+                'selesai' => $request->selesai
+            ]);
+
+            if ($jadwal) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Berhasil menambahkan data',
+                    'data' => $jadwal
+                ], 200);
+            }
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ], 500);
+        }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(JadwalKelas $jadwalKelas)
+    public function show(JadwalKelas $jadwalKelas, $id)
     {
-        //
+        // dd($id);
+        $jadwal = DB::table('jadwal_kelas')
+            ->join('materis', 'jadwal_kelas.materis_id', '=', 'materis.id')
+            ->select('jadwal_kelas.*', 'materis.judul as judul_materi')
+            ->where('jadwal_kelas.id', '=', $id)
+            ->first();
+        // dd($jadwal);
+        if ($jadwal) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Berhasil mendapatkan data',
+                'data' => $jadwal
+            ], 200);
+        }
+        return response()->json([
+            'success' => false,
+            'message' => 'Data tidak ditemukan'
+        ], 404);
     }
 
     /**
@@ -51,16 +126,70 @@ class JadwalKelasController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, JadwalKelas $jadwalKelas)
+    public function update(Request $request, $id)
     {
-        //
+        try {
+            $validator = Validator::make($request->all(), [
+                'nama' => 'required|string',
+                'hari' => 'required',
+                'materis_id' => 'required',
+                'tempat' => 'required',
+                'mulai' => 'required',
+                'selesai' => 'required'
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json($validator->errors(), 400);
+            }
+
+            $jadwalKelas = JadwalKelas::find($id);
+
+            $jadwalKelas->update([
+                'nama' => $request->nama,
+                'hari' => $request->hari,
+                'materis_id' => $request->materis_id,
+                'tempat' => $request->tempat,
+                'mulai' => $request->mulai,
+                'selesai' => $request->selesai
+            ]);
+            return response()->json([
+                'success' => true,
+                'message' => "Berhasil mengupdate data",
+                'materi' => $jadwalKelas,
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ], 500);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(JadwalKelas $jadwalKelas)
+    public function destroy($id)
     {
-        //
+        try {
+            $jadwalKelas = JadwalKelas::find($id);
+            // dd(!$jadwalKelas);
+            if ($jadwalKelas) {
+                $jadwalKelas->delete();
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Berhasil menghapus data'
+                ], 200);
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Data tidak ditemukan'
+            ], 404);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ], 500);
+        }
     }
 }
