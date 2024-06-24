@@ -16,9 +16,7 @@ class JadwalKelasController extends Controller
     public function index()
     {
         try {
-
             $jadwalKelass = JadwalKelas::with('materis')->get();
-
 
             return response()->json([
                 'success' => true,
@@ -50,7 +48,7 @@ class JadwalKelasController extends Controller
             $validator = Validator::make($request->all(), [
                 'nama' => 'required|string',
                 'hari' => 'required',
-                'materis_id' => 'required',
+                'materis_id' => 'required|exists:materis,id',
                 'tempat' => 'required',
                 'mulai' => 'required',
                 'selesai' => 'required'
@@ -122,7 +120,7 @@ class JadwalKelasController extends Controller
             $validator = Validator::make($request->all(), [
                 'nama' => 'required|string',
                 'hari' => 'required',
-                'materis_id' => 'required',
+                'materis_id' => 'required|exists:materis,id',
                 'tempat' => 'required',
                 'mulai' => 'required',
                 'selesai' => 'required'
