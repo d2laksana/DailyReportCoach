@@ -18,12 +18,12 @@ class JadwalKelasController extends Controller
         try {
             // $jadwalKelas = JadwalKelas::all();
 
-            $jadwalKelass = DB::table('jadwal_kelas')
-                ->join('materis', 'jadwal_kelas.materis_id', '=', 'materis.id')
-                ->select('jadwal_kelas.*', 'materis.judul as judul_materi')
-                ->get();
+            // $jadwalKelass = DB::table('jadwal_kelas')
+            //     ->join('materis', 'jadwal_kelas.materis_id', '=', 'materis.id')
+            //     ->select('jadwal_kelas.*', 'materis.judul as judul_materi')
+            //     ->get();
 
-            // $jadwalKelass = JadwalKelas::with('materis')->get();
+            $jadwalKelass = JadwalKelas::with('materis')->get();
 
 
             return response()->json([
@@ -95,7 +95,7 @@ class JadwalKelasController extends Controller
      */
     public function show(JadwalKelas $jadwalKelas, $id)
     {
-        // dd($id);
+        // dd($jadwalKelas);
         $jadwal = DB::table('jadwal_kelas')
             ->join('materis', 'jadwal_kelas.materis_id', '=', 'materis.id')
             ->select('jadwal_kelas.*', 'materis.judul as judul_materi')
