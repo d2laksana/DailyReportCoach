@@ -16,12 +16,6 @@ class JadwalKelasController extends Controller
     public function index()
     {
         try {
-            // $jadwalKelas = JadwalKelas::all();
-
-            // $jadwalKelass = DB::table('jadwal_kelas')
-            //     ->join('materis', 'jadwal_kelas.materis_id', '=', 'materis.id')
-            //     ->select('jadwal_kelas.*', 'materis.judul as judul_materi')
-            //     ->get();
 
             $jadwalKelass = JadwalKelas::with('materis')->get();
 
@@ -93,20 +87,16 @@ class JadwalKelasController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(JadwalKelas $jadwalKelas, $id)
+    public function show($id)
     {
-        // dd($jadwalKelas);
-        $jadwal = DB::table('jadwal_kelas')
-            ->join('materis', 'jadwal_kelas.materis_id', '=', 'materis.id')
-            ->select('jadwal_kelas.*', 'materis.judul as judul_materi')
-            ->where('jadwal_kelas.id', '=', $id)
-            ->first();
-        // dd($jadwal);
-        if ($jadwal) {
+        $data = JadwalKelas::find($id);
+
+        if ($data) {
+            $jadwalKelas = $data->load('materis');
             return response()->json([
                 'success' => true,
                 'message' => 'Berhasil mendapatkan data',
-                'data' => $jadwal
+                'data' => $jadwalKelas
             ], 200);
         }
         return response()->json([
