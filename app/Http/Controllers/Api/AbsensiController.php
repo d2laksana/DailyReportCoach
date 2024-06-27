@@ -62,9 +62,54 @@ class AbsensiController extends Controller
             } else {
                 $pertemuanId = $cekPertemuan->id;
             }
-
-            // save data absensi
+            // dataAbsensi Siswa
             $dataAbsensi = $request->input('siswa');
+
+            // Cek Data Absensi 
+            $cekDataAbsensi = Absensi::where('pertemuans_id', $pertemuanId)->get();
+
+
+
+            if (count($cekDataAbsensi) != 0) {
+
+                foreach ($dataAbsensi as &$item) {
+                    // dd($item['siswas_id']);
+                    // dd($cekDataAbsensi);
+                    $absenSiswa = Absensi::where('siswas_id', $item['siswas_id'])
+                        ->where('pertemuans_id', $pertemuanId)
+                        ->first();
+
+                    if ($absenSiswa) {
+                        $absenSiswa->update([
+                            'status' => $item['status']
+                        ]);
+                    } else {
+                        $absenBaru = Absensi::create([
+                            'pertemuans_id' => $pertemuanId,
+                            'siswas_id' => $item['siswas_id'],
+                            'status' => $item['status']
+                        ]);
+                    }
+                }
+
+                $ulasan = Ulasan::where('pertemuans_id', $pertemuanId);
+
+                if ($ulasan) {
+                    $ulasan->update([
+                        'deskripsi' => $request->ulasan
+                    ]);
+                }
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Berhasil menyimpan data absensi',
+                    'data' => [
+                        'Absensi' => $dataAbsensi,
+                        'Ulasan' => $request->ulasan,
+                        'Pertemuan_ke' => $request->pertemuan_ke
+                    ]
+                ], 200);
+            }
+
             foreach ($dataAbsensi as &$item) {
                 $item['pertemuans_id'] = $pertemuanId;
             }
@@ -83,7 +128,7 @@ class AbsensiController extends Controller
                 'message' => 'Berhasil menyimpan data absensi',
                 'data' => [
                     'Absensi' => $dataAbsensi,
-                    'Ulasan' => $ulasan,
+                    'Ulasan' => $request->ulasan,
                     'Pertemuan_ke' => $request->pertemuan_ke
                 ]
             ], 200);
@@ -145,6 +190,7 @@ class AbsensiController extends Controller
                 ->join('pertemuans', 'absensis.pertemuans_id', '=', 'pertemuans.id')
                 ->where('pertemuans.pertemuan_ke', '=', $request->pertemuan_ke)
                 ->where('pertemuans.jadwal_kelas_id', '=', $request->jadwal_kelas_id)
+                ->orderBy('absensis.siswas_id',)
                 ->get();
 
             $dataSiswa = DB::table('siswas')

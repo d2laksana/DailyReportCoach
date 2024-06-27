@@ -159,4 +159,36 @@ class SiswaController extends Controller
             ], 500);
         }
     }
+
+    public function searchSiswa(Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'kata' => 'required',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json($validator->errors(), 400);
+            }
+            $searchQuery =  $request->kata;
+            $siswa = Siswa::with('jadwalKelas')
+                ->where('siswas.nama', 'like', '%' . $searchQuery . '%')
+                ->orWhere('siswas.noIdentitas', 'like', '%' . $searchQuery . '%')
+                ->orWhereHas('jadwalKelas', function ($query) use ($searchQuery) {
+                    $query->where('jadwal_kelas.nama', 'like', '%' . $searchQuery . '%');
+                })
+                ->get();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Berhasil mendapatkan data',
+                'data' => $siswa
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ], 500);
+        }
+    }
 }

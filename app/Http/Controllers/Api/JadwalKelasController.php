@@ -185,8 +185,9 @@ class JadwalKelasController extends Controller
     public function getJadwalToday()
     {
         try {
-            $jadwalToday = DB::table('jadwal_kelas')
-                ->where('jadwal_kelas.hari', '=', Carbon::now()->format('l'))
+
+            $jadwalToday = JadwalKelas::with('materis')
+                ->where('jadwal_kelas.hari', Carbon::now()->format('l'))
                 ->get();
 
             if (count($jadwalToday) != 0) {
