@@ -252,6 +252,15 @@ class AbsensiController extends Controller
                 ->orderBy('absensis.siswas_id',)
                 ->delete();
 
+            $cekDataPertemuan = Pertemuan::where('pertemuan_ke', $request->pertemuan_ke)
+                ->where('jadwal_kelas_id', $request->jadwal_kelas_id)
+                ->delete();
+
+            $cekDataUlasan = Ulasan::join('pertemuans', 'ulasans.pertemuans_id', '=', 'pertemuans.id')
+                ->where('pertemuans.pertemuan_ke', $request->pertemuan_ke)
+                ->where('jadwal_kelas_id', $request->jadwal_kelas_id)
+                ->delete();
+
 
             return response()->json([
                 'success' => true,
