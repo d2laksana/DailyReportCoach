@@ -20,7 +20,7 @@ class MateriController extends Controller
         return response()->json([
             'success' => true,
             'message' => "Berhasil mendapatkan data",
-            'user'    => $materi,
+            'data'    => $materi,
         ], 200);
     }
 
