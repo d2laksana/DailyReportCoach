@@ -24,3 +24,4 @@ Route::apiResource('absensi', AbsensiController::class)->middleware(AuthMiddlewa
 Route::get('getabsen', [AbsensiController::class, 'filterAbsen'])->middleware(AuthMiddleware::class);
 Route::get('getjadwaltoday', [JadwalKelasController::class, 'getJadwalToday'])->middleware(AuthMiddleware::class);
 Route::get('search-siswa', [SiswaController::class, 'searchSiswa'])->middleware(AuthMiddleware::class);
+Route::delete('deldataabsensi', [AbsensiController::class, 'delDataAbsensi'])->middleware(AuthMiddleware::class);

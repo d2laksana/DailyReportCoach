@@ -234,4 +234,34 @@ class AbsensiController extends Controller
             ], 500);
         }
     }
+
+    public function delDataAbsensi(Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'pertemuan_ke' => 'required',
+                'jadwal_kelas_id' => 'required|exists:jadwal_kelas,id'
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json($validator->errors(), 400);
+            }
+            $cekDataAbsensi = Absensi::join('pertemuans', 'absensis.pertemuans_id', '=', 'pertemuans.id')
+                ->where('pertemuans.pertemuan_ke', '=', $request->pertemuan_ke)
+                ->where('pertemuans.jadwal_kelas_id', '=', $request->jadwal_kelas_id)
+                ->orderBy('absensis.siswas_id',)
+                ->delete();
+
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Berhasil menghapus data'
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ], 500);
+        }
+    }
 }
