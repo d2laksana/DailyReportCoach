@@ -190,6 +190,7 @@ class JadwalKelasController extends Controller
                 ->where('jadwal_kelas.hari', Carbon::now()->format('l'))
                 ->get();
 
+
             if (count($jadwalToday) != 0) {
                 return response()->json([
                     'success' => true,
@@ -197,6 +198,12 @@ class JadwalKelasController extends Controller
                     'data' => $jadwalToday,
                 ], 200);
             }
+
+            return response()->json([
+                'success' => false,
+                'message' => "Tidak ada jadwal",
+                'data' => null,
+            ], 404);
         } catch (\Throwable $th) {
             return response()->json([
                 'success' => false,
