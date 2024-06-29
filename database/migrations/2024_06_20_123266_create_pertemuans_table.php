@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('pertemuans', function (Blueprint $table) {
             $table->id();
-            $table->integer('pertemuan_ke')->unique()->index();
+            $table->string('pertemuan_ke');
             $table->foreignId('jadwal_kelas_id')->constrained('jadwal_kelas')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
